@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "node-watch": "~0.3.4",
+    "imagemagick": "~0.1.3"
+  },
+  "volo": {
+    "baseUrl": "client/vendor",
+    "dependencies": {
+      "jquery": "github:jquery/jquery/2.0.3"
+    }
+  }
+}
