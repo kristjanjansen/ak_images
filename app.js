@@ -72,12 +72,12 @@ fs.readdirSync(source)
         }
         indexDir.files.push(indexFile)
       });
-      
+    //  if (indexDir.files) indexDir.filepath_target = indexDir.files[0].filepath_target
       index.push(indexDir)
       
     });
 
-    var output = JSON.stringify(index, null , 2)
+    var output = JSON.stringify({dirs: index}, null , 2)
     fs.writeFileSync(indexFile, output)
 
 }

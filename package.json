@@ -6,7 +6,8 @@
   "volo": {
     "baseUrl": "client/vendor",
     "dependencies": {
-      "jquery": "github:jquery/jquery/2.0.3"
+      "jquery": "github:jquery/jquery/2.0.3",
+      "mustache": "github:janl/mustache.js/0.7.2"
     }
   }
 }
