@@ -72,6 +72,7 @@ fs.readdirSync(source)
       
       var indexDir = {}
       indexDir[dir] = {}
+      indexDir[dir].files = []
       
       fs.readdirSync(path.join(source, dir))
       .filter(function (file) {
