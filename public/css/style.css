@@ -1,4 +1,35 @@
+*, *:before, *:after {
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+ }
+@font-face {
+  font-family: 'KelsonSans';
+  src: url("fonts/kelson_sans_regular-wf.eot");
+  src: url("fonts/kelson_sans_regular-wf.eot?#iefix") format("embedded-opentype"), url("fonts/kelson_sans_regular-wf.woff") format("woff"), url("fonts/kelson_sans_regular-wf.ttf") format("truetype"), url("fonts/kelson_sans_regular-wf.svg#kelson_sansregular") format("svg");
+  font-style: normal;
+}
 body {
   font-family: sans-serif;
-  margin: 20px;
+  margin: 0;
+  padding: 0;
+}
+header {
+  padding-left: 20px;
+}
+article {
+  font-size:0;    
+}
+h1, h2, h3, h4 {
+  font-family: sans-serif;
+  font-weight: normal;
+  letter-spacing: -0.025em;  
+}
+.tile {
+  width: 320px;
+  height: 320px;
+  display: inline-block;
+  vertical-align: bottom;
+  padding: 10px;
+}
+.tile a {
+  color: white;
 }

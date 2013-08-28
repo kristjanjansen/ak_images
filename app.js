@@ -55,8 +55,8 @@ function generateThumbnail(sf, cb) {
   im.crop({
     srcPath: sf,
     dstPath: tf,
-    width: 100,
-    height: 100
+    width: 320,
+    height: 320
   }, function(err, stdout, stderr) {
     console.log(err, stdout, stderr)
     cb()

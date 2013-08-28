@@ -6,26 +6,33 @@
   <body>
 
     <script type="front/html" id="index">
-  
+
+    <header>
+    <h1>Images</h1>
+    </header>
+    
     {{#index}}
+
+    <div class="tile" style="background-image: url('{{files.0.filepath_target}}')">
    
       <a href="{{dir}}"><h2>{{dir}}</a></h2>
-   
-      {{#files}}
-      <img id="file" src="{{filepath_target}}" />
-      {{/files}}
-      
+
+    </div>
+    
     {{/index}}
     
     </script> 
     
     <script type="front/html" id="dir">
-     
-      <h1>{{dir}}</h1>
-   
+    
+    <header>
+    <h1><a href="/">&larr;</a> {{dir}}</h1>
+    </header>
+    <article>     
       {{#files}}
-      <img id="file" src="{{filepath_target}}" />
+      <div class="tile"><img id="file" src="{{filepath_target}}" /></div>
       {{/files}}
+    </article>     
       
     </script>
     

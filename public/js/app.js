@@ -1,12 +1,16 @@
-//$(document).ready(function() {
+$(document).ready(function() {
 
   page('*', data)
   page('/', renderFront)
   page('/:dir', renderDir)
-  page({dispatch: true})
+  page({dispatch: true, click: false})
 
+  $('a').on('click', function(ev) {
+    var dir = $(this).attr(href)
+    console.log(dir)
+  })
   
-//})
+})
 
 
 function data(ctx, next) {
@@ -18,8 +22,6 @@ function data(ctx, next) {
 
     data.index.forEach(function(item) {
       ctx.dirTpl[item.dir] = Mustache.render($('#dir').html(), item)
- //     ctx.dir[item.dir] = item.dir
-
     })
     
     next()
@@ -34,8 +36,7 @@ function renderFront(ctx, next) {
 }
 
 function renderDir(ctx, next) {
-  //console.log(ctx.dir,ctx.params.dir)
-//  $('body').html(ctx.dir[ctx.params.dir])
+
   $('body').html(ctx.dirTpl[ctx.params.dir])
 
 //  $('body').html('hem')
