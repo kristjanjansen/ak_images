@@ -42,11 +42,11 @@ article h2 {
   margin: 0;
   padding: 0;
 }
-
 .tile {
   width: 200px;
   height: 200px;
   display: inline-block;
+  background-color: #444;
 }
 .tile a {
   color: white;

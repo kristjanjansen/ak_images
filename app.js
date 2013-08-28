@@ -31,38 +31,60 @@ function validateFile(file) {
   return fs.statSync(file).isFile() && file.match(filetypes)
 } 
 
-watch.createMonitor(source, function (monitor) {
+watch.createMonitor(source, {ignoreDotFiles: true}, function (monitor) {
+
    monitor.on("created", function (f, stat) {
-    console.log(stat.isDirectory())
- //      generateThumbnail(f, function() {});
+    console.log('crea', f)
+       
+    if (stat.isDirectory()) {
+
+      var dir = f.replace(source, target)
+   
+      if (!fs.existsSync(dir)) {
+        fs.mkdir(dir, function() {})
+      }
+      
+      fs.readdirSync(f)
+       .filter(function (file) {
+         return fs.statSync(path.join(f, file)).isFile() && file.match(filetypes);
+       })
+       .forEach(function (file) {
+         var src = path.join(f,file)
+         var tgt = src.replace(source, target)
+         generateThumbnail(src, tgt, function() {});
+       });
+    
+    } else if (f.match(filetypes)) {
+        var tgt = f.replace(source, target)
+        generateThumbnail(f, tgt, function() {});
+    }
+       
    })
+   
    monitor.on("changed", function (f, curr, prev) {
+     console.log('cha', f)
    })
+   
    monitor.on("removed", function (f, stat) {
+     console.log('rem', f)
    })
+   
  })
 
 
-function generateThumbnail(sf, cb) {
-  
-  var tf = sf.replace(source, target)
- 
-  console.log(sf,tf)
-  
-  if (!fs.existsSync(path.dirname(tf))) {
-    fs.mkdirSync(path.dirname(tf))
-  }
+ function generateThumbnail(sf, tf, cb) {
 
-  im.crop({
-    srcPath: sf,
-    dstPath: tf,
-    width: 200,
-    height: 200
-  }, function(err, stdout, stderr) {
-    console.log(err, stdout, stderr)
-    cb()
-  });
-}
+   im.crop({
+     srcPath: sf,
+     dstPath: tf,
+     width: 200,
+     height: 200
+   }, function(err, stdout, stderr) {
+     console.log(err, stdout, stderr)
+     cb()
+   });
+ 
+ }
 
 
 
