@@ -1,10 +1,12 @@
-$(document).ready(function() {
+//$(document).ready(function() {
 
-  page('/', data, renderFront, log)
-  page('/:dir', data, renderDir, log)
+  page('*', data)
+  page('/', renderFront)
+  page('/:dir', renderDir)
   page({dispatch: true})
 
-})
+  
+//})
 
 
 function data(ctx, next) {
@@ -16,27 +18,24 @@ function data(ctx, next) {
 
 }
 
-function log(ctx, next) {
-  console.log(ctx.data)  
-  next()
-}
 
 function renderFront(ctx, next) {
   var output = Mustache.render($('#index').html(), ctx.data)
   $('body').html(output)
-  next()
+  
 }
 
 function renderDir(ctx, next) {
-  $('body').append('hem')
-  
+ 
+  $('body').html('hem')
+/*  
   ctx.data.index.forEach(function(item) {
     if (item.dir == ctx.params.dir) {
       var output = Mustache.render($('#dir').html(), item)
       $('body').html(output)
     }
   })
-  next()
+*/  
 }
 
    /*
