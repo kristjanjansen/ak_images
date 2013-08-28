@@ -33,8 +33,8 @@ function validateFile(file) {
 
 watch.createMonitor(source, function (monitor) {
    monitor.on("created", function (f, stat) {
-       generateThumbnail(f, function() {
-       });
+    console.log(stat.isDirectory())
+ //      generateThumbnail(f, function() {});
    })
    monitor.on("changed", function (f, curr, prev) {
    })
@@ -47,6 +47,8 @@ function generateThumbnail(sf, cb) {
   
   var tf = sf.replace(source, target)
  
+  console.log(sf,tf)
+  
   if (!fs.existsSync(path.dirname(tf))) {
     fs.mkdirSync(path.dirname(tf))
   }
