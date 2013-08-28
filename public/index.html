@@ -9,7 +9,7 @@
   
     {{#dirs}}
    
-      <h2>{{dir}}</h2>
+      <a href="client/{{dir}}"><h2>{{dir}}</a></h2>
    
       {{#files}}
       <img id="file" src="../{{filepath_target}}" />
@@ -20,6 +20,7 @@
     </script> 
     
     <script type="text/javascript" src="vendor/jquery.js"></script> 
+    <script type="text/javascript" src="vendor/page/index.js"></script> 
     <script type="text/javascript" src="vendor/mustache.js"></script> 
     <script type="text/javascript" src="js/app.js"></script> 
   </body>

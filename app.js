@@ -2,6 +2,19 @@ var fs = require('fs');
 var path = require('path');
 var watch = require('watch')
 var im = require('imagemagick');
+var express = require('express');
+
+
+app = express()
+  app.use(express.static(__dirname + '/public'))
+  app.get('/index.json', function(req, res){
+    res.send(generateIndex());
+  });
+  app.get('/*', function(req, res){
+    res.sendfile(__dirname + '/public/index.html');
+  });
+app.listen(3000)
+
 
 var filetypes = /\.(jpg|jpeg|png|gif)$/i
 
@@ -16,7 +29,7 @@ function validateFile(file) {
 watch.createMonitor(source, function (monitor) {
    monitor.on("created", function (f, stat) {
        generateThumbnail(f, function() {
-         writeIndex()
+//         writeIndex()
        });
    })
    monitor.on("changed", function (f, curr, prev) {
@@ -46,7 +59,7 @@ function generateThumbnail(sf, cb) {
 }
 
 
-function writeIndex() {
+function generateIndex() {
 
 var index = []
 
@@ -77,7 +90,6 @@ fs.readdirSync(source)
       
     });
 
-    var output = JSON.stringify({dirs: index}, null , 2)
-    fs.writeFileSync(indexFile, output)
+    return JSON.stringify({dirs: index}, null , 2)
 
 }
