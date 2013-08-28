@@ -19,6 +19,16 @@
     
     </script> 
     
+    <script type="front/html" id="dir">
+     
+      <h1>{{dir}}</h1>
+   
+      {{#files}}
+      <img id="file" src="{{filepath_target}}" />
+      {{/files}}
+      
+    </script>
+    
     <script type="text/javascript" src="vendor/jquery.js"></script> 
     <script type="text/javascript" src="vendor/page/index.js"></script> 
     <script type="text/javascript" src="vendor/mustache.js"></script> 
