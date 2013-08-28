@@ -2,7 +2,8 @@ $(document).ready(function() {
 
   page('*', data)
   page('/', renderFront)
-  page('/:dir/:file?', renderDir)
+  page('/:dir', renderDir)
+  page('/:dir/:file', renderFile)
   page({dispatch: true, click: false})
 
   $('a').on('click', function(ev) {
@@ -22,6 +23,12 @@ function data(ctx, next) {
 
     data.index.forEach(function(item) {
       ctx.dirTpl[item.dir] = Mustache.render($('#dir').html(), item)
+          
+      item.files.forEach(function(i) {
+        console.log(item, i)
+        ctx.dirTpl[item.dir + '/' + i.file] = Mustache.render($('#file').html(), {dir: item, file: i})
+      })
+      
     })
     
     next()
@@ -36,28 +43,9 @@ function renderFront(ctx, next) {
 }
 
 function renderDir(ctx, next) {
-
   $('body').html(ctx.dirTpl[ctx.params.dir])
-
-  if (ctx.params.file) {
-    $('#file').attr('style', 'background-image: url(/files/source/' + ctx.params.dir + '/' + ctx.params.file + ')')
-  }
-  
-//  $('body').html('hem')
-/*  
-  ctx.data.index.forEach(function(item) {
-    if (item.dir == ctx.params.dir) {
-      var output = Mustache.render($('#dir').html(), item)
-      $('body').html(output)
-    }
-  })
-*/  
 }
 
-   /*
-  $.getJSON('../files/index.json', function(data) {
-    console.log(data)
-
-    var output = Mustache.render($('#front').html(), data)
-    $('body').html(output)
-*/
+function renderFile(ctx, next) {
+  $('body').html(ctx.dirTpl[ctx.params.dir + '/' + ctx.params.file])
+}
