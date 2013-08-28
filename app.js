@@ -31,6 +31,43 @@ function validateFile(file) {
   return fs.statSync(file).isFile() && file.match(filetypes)
 } 
 
+
+function generateIndex() {
+
+var index = []
+
+fs.readdirSync(source)
+    .filter(function(dir) {
+        return fs.statSync(path.join(source, dir)).isDirectory();
+    })
+    .forEach(function (dir) {
+      
+      var indexDir = {}
+      indexDir.dir = dir
+      indexDir.files = []
+      
+      fs.readdirSync(path.join(source, dir))
+      .filter(function (file) {
+        return fs.statSync(path.join(source, dir, file)).isFile() && file.match(filetypes);
+      })
+      .forEach(function (file) {
+        var indexFile = {
+          file: file,
+          filepath_source: path.join(source, dir, file),
+          filepath_target: path.join(target, dir, file)
+        }
+        indexDir.files.push(indexFile)
+      });
+      
+      index.push(indexDir)
+      
+    });
+
+    return index
+
+}
+
+/*
 watch.createMonitor(source, {ignoreDotFiles: true}, function (monitor) {
 
    monitor.on("created", function (f, stat) {
@@ -85,41 +122,5 @@ watch.createMonitor(source, {ignoreDotFiles: true}, function (monitor) {
    });
  
  }
-
-
-
-function generateIndex() {
-
-var index = []
-
-fs.readdirSync(source)
-    .filter(function(dir) {
-        return fs.statSync(path.join(source, dir)).isDirectory();
-    })
-    .forEach(function (dir) {
-      
-      var indexDir = {}
-      indexDir.dir = dir
-      indexDir.files = []
-      
-      fs.readdirSync(path.join(source, dir))
-      .filter(function (file) {
-        return fs.statSync(path.join(source, dir, file)).isFile() && file.match(filetypes);
-      })
-      .forEach(function (file) {
-        var indexFile = {
-          file: file,
-          filepath_source: path.join(source, dir, file),
-          filepath_target: path.join(target, dir, file)
-        }
-        indexDir.files.push(indexFile)
-      });
-      
-    //  if (indexDir.files) indexDir.filepath_target = indexDir.files[0].filepath_target
-      index.push(indexDir)
-      
-    });
-
-    return index
-
-}
+ 
+*/
