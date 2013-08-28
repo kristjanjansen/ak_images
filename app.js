@@ -34,7 +34,6 @@ function validateFile(file) {
 watch.createMonitor(source, function (monitor) {
    monitor.on("created", function (f, stat) {
        generateThumbnail(f, function() {
-//         writeIndex()
        });
    })
    monitor.on("changed", function (f, curr, prev) {

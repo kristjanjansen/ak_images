@@ -16,6 +16,7 @@ body {
 a, a:link, a:visited, a:hover {
   color: white;
   text-decoration: none;
+  font-weight: normal;
 }
 header {
   padding-left: 30px;
