@@ -5,17 +5,17 @@
   </head>
   <body>
 
-    <script type="front/html" id="front">
+    <script type="front/html" id="index">
   
-    {{#dirs}}
+    {{#index}}
    
-      <a href="client/{{dir}}"><h2>{{dir}}</a></h2>
+      <a href="{{dir}}"><h2>{{dir}}</a></h2>
    
       {{#files}}
-      <img id="file" src="../{{filepath_target}}" />
+      <img id="file" src="{{filepath_target}}" />
       {{/files}}
       
-    {{/dirs}}
+    {{/index}}
     
     </script> 
     

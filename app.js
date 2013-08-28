@@ -8,7 +8,7 @@ var express = require('express');
 app = express()
   app.use(express.static(__dirname + '/public'))
   app.get('/index.json', function(req, res){
-    res.send(generateIndex());
+    res.json({index: generateIndex()});
   });
   app.get('/*', function(req, res){
     res.sendfile(__dirname + '/public/index.html');
@@ -59,6 +59,7 @@ function generateThumbnail(sf, cb) {
 }
 
 
+
 function generateIndex() {
 
 var index = []
@@ -70,8 +71,7 @@ fs.readdirSync(source)
     .forEach(function (dir) {
       
       var indexDir = {}
-      indexDir.dir = dir
-      indexDir.files = []
+      indexDir[dir] = {}
       
       fs.readdirSync(path.join(source, dir))
       .filter(function (file) {
@@ -83,13 +83,14 @@ fs.readdirSync(source)
           filepath_source: path.join(source, dir, file),
           filepath_target: path.join(target, dir, file)
         }
-        indexDir.files.push(indexFile)
+        indexDir[dir].files.push(indexFile)
       });
+      
     //  if (indexDir.files) indexDir.filepath_target = indexDir.files[0].filepath_target
       index.push(indexDir)
       
     });
 
-    return JSON.stringify({dirs: index}, null , 2)
+    return index
 
 }

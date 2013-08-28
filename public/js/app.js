@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
-  page('/', data, log)
-  page('/:path', data, log)
+  page('/', data, renderFront)
+  page('/:dir', data, log)
   page()
 
 })
@@ -17,7 +17,15 @@ function data(ctx, next) {
 }
 
 function log(ctx, next) {
+  console.log(ctx.params.dir)  
+  console.log(ctx.params.file)  
   console.log(ctx.data)  
+  next()
+}
+
+function renderFront(ctx, next) {
+  var output = Mustache.render($('#index').html(), ctx.data)
+  $('body').html(output)
   next()
 }
 
