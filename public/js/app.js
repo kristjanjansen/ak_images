@@ -2,7 +2,7 @@ $(document).ready(function() {
 
   page('*', data)
   page('/', renderFront)
-  page('/:dir', renderDir)
+  page('/:dir/:file?', renderDir)
   page({dispatch: true, click: false})
 
   $('a').on('click', function(ev) {
@@ -39,6 +39,8 @@ function renderDir(ctx, next) {
 
   $('body').html(ctx.dirTpl[ctx.params.dir])
 
+  console.log(ctx.params.file)
+  
 //  $('body').html('hem')
 /*  
   ctx.data.index.forEach(function(item) {
