@@ -12,7 +12,16 @@
 function data(ctx, next) {
 
   $.getJSON('/index.json', function(data) {
-    ctx.data = data
+    ctx.indexTpl = Mustache.render($('#index').html(), data)
+
+    ctx.dirTpl = {}
+
+    data.index.forEach(function(item) {
+      ctx.dirTpl[item.dir] = Mustache.render($('#dir').html(), item)
+ //     ctx.dir[item.dir] = item.dir
+
+    })
+    
     next()
   })
 
@@ -20,14 +29,16 @@ function data(ctx, next) {
 
 
 function renderFront(ctx, next) {
-  var output = Mustache.render($('#index').html(), ctx.data)
-  $('body').html(output)
-  
+  $('body').html(ctx.indexTpl)
+  next()
 }
 
 function renderDir(ctx, next) {
- 
-  $('body').html('hem')
+  //console.log(ctx.dir,ctx.params.dir)
+//  $('body').html(ctx.dir[ctx.params.dir])
+  $('body').html(ctx.dirTpl[ctx.params.dir])
+
+//  $('body').html('hem')
 /*  
   ctx.data.index.forEach(function(item) {
     if (item.dir == ctx.params.dir) {
