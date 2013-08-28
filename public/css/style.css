@@ -51,3 +51,10 @@ article h2 {
 .tile a {
   color: white;
 }
+#file {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  background-position: center;
+  background-size: cover;
+}

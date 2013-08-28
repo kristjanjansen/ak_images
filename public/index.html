@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="../css/style.css"  />
+    <link rel="stylesheet" type="text/css" href="/css/style.css"  />
     <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
             
   </head>
@@ -17,7 +17,7 @@
     
     {{#index}}
 
-    <div class="tile" style="background-image: url('../{{files.0.filepath_target}}')">
+    <div class="tile" style="background-image: url('/{{files.0.filepath_target}}')">
    
       <a href="{{dir}}"><h2>{{dir}}</h2></a>
 
@@ -34,19 +34,30 @@
     <header>
     <h1><a href="/">Photos</a> &rsaquo; {{dir}}</h1>
     </header>
-    <article>     
+    <article>
       {{#files}}
-      <div class="tile" style="background-image: url('../{{filepath_target}}')">
-      <a href="{{dir}}/{{file}}"><h2>{{file}}</h2></a>
+      <div class="tile" style="background-image: url('/{{filepath_target}}')">
+      <a href="/{{dir}}/{{file}}"><h2>{{file}}</h2></a>
       </div>
       {{/files}}
     </article>     
       
     </script>
+
+    <script type="front/html" id="file">
     
-    <script type="text/javascript" src="../vendor/jquery.js"></script> 
-    <script type="text/javascript" src="../vendor/page/index.js"></script> 
-    <script type="text/javascript" src="../vendor/mustache.js"></script> 
-    <script type="text/javascript" src="../js/app.js"></script> 
+    <header>
+    <h1><a href="/">Photos</a> &rsaquo; <a href="/{{dir}}">{{dir}}</a> &rsaquo; {{file}}</h1>
+    </header>
+    <article>
+      <img src="/{{filepath_target}}')" />
+    </article>     
+      
+    </script>
+    
+    <script type="text/javascript" src="/vendor/jquery.js"></script> 
+    <script type="text/javascript" src="/vendor/page/index.js"></script> 
+    <script type="text/javascript" src="/vendor/mustache.js"></script> 
+    <script type="text/javascript" src="/js/app.js"></script> 
   </body>
 </html>

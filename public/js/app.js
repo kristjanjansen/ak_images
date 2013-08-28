@@ -39,7 +39,9 @@ function renderDir(ctx, next) {
 
   $('body').html(ctx.dirTpl[ctx.params.dir])
 
-  console.log(ctx.params.file)
+  if (ctx.params.file) {
+    $('#file').attr('style', 'background-image: url(/files/source/' + ctx.params.dir + '/' + ctx.params.file + ')')
+  }
   
 //  $('body').html('hem')
 /*  
