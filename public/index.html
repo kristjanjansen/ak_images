@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="css/style.css"  /> 
+    <link rel="stylesheet" type="text/css" href="css/style.css"  />
+    <link href="<link href='http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic' rel='stylesheet' type='text/css'>" rel="stylesheet" type="text/css">
+            
   </head>
   <body>
 
@@ -11,15 +13,19 @@
     <h1>Images</h1>
     </header>
     
+    <article>     
+    
     {{#index}}
 
     <div class="tile" style="background-image: url('{{files.0.filepath_target}}')">
    
-      <a href="{{dir}}"><h2>{{dir}}</a></h2>
+      <a href="{{dir}}"><h2>{{dir}}</h2></a>
 
     </div>
     
     {{/index}}
+
+    </article>     
     
     </script> 
     
@@ -30,7 +36,9 @@
     </header>
     <article>     
       {{#files}}
-      <div class="tile"><img id="file" src="{{filepath_target}}" /></div>
+      <div class="tile" style="background-image: url('{{filepath_target}}')">
+      <a href=""><h2>{{file}}</h2></a>
+      </div>
       {{/files}}
     </article>     
       
