@@ -1,8 +1,8 @@
 $(document).ready(function() {
 
-  page('/', data, renderFront)
+  page('/', data, renderFront, log)
   page('/:dir', data, log)
-  page()
+  page({dispatch: true})
 
 })
 
@@ -17,9 +17,9 @@ function data(ctx, next) {
 }
 
 function log(ctx, next) {
+  console.log(ctx.data)  
   console.log(ctx.params.dir)  
   console.log(ctx.params.file)  
-  console.log(ctx.data)  
   next()
 }
 

@@ -71,8 +71,8 @@ fs.readdirSync(source)
     .forEach(function (dir) {
       
       var indexDir = {}
-      indexDir[dir] = {}
-      indexDir[dir].files = []
+      indexDir.dir = dir
+      indexDir.files = []
       
       fs.readdirSync(path.join(source, dir))
       .filter(function (file) {
@@ -84,7 +84,7 @@ fs.readdirSync(source)
           filepath_source: path.join(source, dir, file),
           filepath_target: path.join(target, dir, file)
         }
-        indexDir[dir].files.push(indexFile)
+        indexDir.files.push(indexFile)
       });
       
     //  if (indexDir.files) indexDir.filepath_target = indexDir.files[0].filepath_target
