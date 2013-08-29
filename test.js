@@ -28,12 +28,15 @@ wrench.readdirSyncRecursive(source)
     index[dir].files = []
   } 
   
-  index[dir].files.push(file)
-
+  index[dir].files.push({
+    file: file,
+    filepath_source: path.join(source, file),
+    filepath_target: path.join(target, file)
+  })
+  
 })
-console.log(index)
 
-
+console.log(JSON.stringify(index, null, 2))
 
 
 
