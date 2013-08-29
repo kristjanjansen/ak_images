@@ -58,7 +58,11 @@ function generateIndex() {
 
   })
 
-  return index
+  var index_a = []
+  for (key in index) {
+    index_a.push({dir: key, files: index[key].files})
+  }
+  return index_a
 
 }
 
