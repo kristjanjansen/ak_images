@@ -3,6 +3,7 @@ var path = require('path');
 var watch = require('watch')
 var im = require('imagemagick');
 var express = require('express');
+var wrench = require('wrench')
 
 
 app = express()
@@ -34,36 +35,30 @@ function validateFile(file) {
 
 function generateIndex() {
 
-var index = []
+  var index = {}
 
-fs.readdirSync(source)
-    .filter(function(dir) {
-        return fs.statSync(path.join(source, dir)).isDirectory();
+  wrench.readdirSyncRecursive(source)
+  .filter(function(f) {
+      return f.split('/').length == 2 && fs.statSync(path.join(source, f)).isFile() && f.match(filetypes)
+  })
+  .forEach(function (f) {
+    var dir = f.split('/')[0]
+    var file = f.split('/')[1]
+
+    if (!index[dir]) {
+      index[dir] = {}
+      index[dir].files = []
+    } 
+
+    index[dir].files.push({
+      file: file,
+      filepath_source: path.join(source, f),
+      filepath_target: path.join(target, f)
     })
-    .forEach(function (dir) {
-      
-      var indexDir = {}
-      indexDir.dir = dir
-      indexDir.files = []
-      
-      fs.readdirSync(path.join(source, dir))
-      .filter(function (file) {
-        return fs.statSync(path.join(source, dir, file)).isFile() && file.match(filetypes);
-      })
-      .forEach(function (file) {
-        var indexFile = {
-          file: file,
-          filepath_source: path.join(source, dir, file),
-          filepath_target: path.join(target, dir, file)
-        }
-        indexDir.files.push(indexFile)
-      });
-      
-      index.push(indexDir)
-      
-    });
 
-    return index
+  })
+
+  return index
 
 }
 
