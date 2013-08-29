@@ -1,6 +1,7 @@
 var fs = require('fs')
 var path = require('path')
 var each = require('each')
+var cron = require('cron').CronJob;
 
 var wrench = require('wrench')
 var im = require('imagemagick');
@@ -9,6 +10,11 @@ var source = './files/source'
 var target = './files/target'
 var filetypes = /\.(jpg|jpeg|png|gif)$/i
 
+var cron = require('cron').CronJob;
+var job = new cron('*/10 * * * * *', processDir).start()
+
+function processDir() {
+  
 var queue = []
 
 wrench.readdirSyncRecursive('./files/source')
@@ -32,9 +38,10 @@ each(queue)
   })
 })
 .on('end', function() {
-  console.log('done')
+  console.log('Done')
 })
 
+}
 
 function generateThumbnail(s, t, callback) {
   console.log('im:', s, t)
