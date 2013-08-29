@@ -1,10 +1,12 @@
 var fs = require('fs')
 var path = require('path')
+var each = require('each')
 
 var wrench = require('wrench')
+var im = require('imagemagick');
 
-var source = 'files/source'
-var target = 'files/target'
+var source = './files/source'
+var target = './files/target'
 var filetypes = /\.(jpg|jpeg|png|gif)$/i
 
 var queue = []
@@ -17,4 +19,33 @@ wrench.readdirSyncRecursive('./files/source')
   if (!fs.existsSync(path.join(target, f))) queue.push(f)
 })
 
-console.log(queue)
+each(queue)
+.on('item', function(f, i, next) {
+  var p = path.join(target, f.split('/')[0])
+  if (!fs.existsSync(p)) {
+    fs.mkdirSync(p)
+  }
+  var s = path.join(source, f)
+  var t = path.join(target, f)  
+  generateThumbnail(s, t, function() {
+    next()
+  })
+})
+.on('end', function() {
+  console.log('done')
+})
+
+
+function generateThumbnail(s, t, callback) {
+  console.log('im:', s, t)
+  im.crop({
+    srcPath: s,
+    dstPath: t,
+    width: 200,
+    height: 200
+  }, function(err, stdout, stderr) {
+    console.log(err, stdout, stderr)
+    callback()
+  });
+
+}
