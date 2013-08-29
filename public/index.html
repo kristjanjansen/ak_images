@@ -17,7 +17,7 @@
     
     {{#index}}
 
-    <div class="tile" style="background-image: url('/{{files.0.filepath_source}}')">
+    <div class="tile" style="background-image: url('/{{files.0.filepath_target}}')">
    
       <a href="{{dir}}"><h2>{{dir}}</h2></a>
 
@@ -36,7 +36,7 @@
     </header>
     <article>
       {{#files}}
-      <div class="tile" style="background-image: url('/{{filepath_source}}')">
+      <div class="tile" style="background-image: url('/{{filepath_target}}')">
       <a href="/{{dir}}/{{file}}"><h2>{{file}}</h2></a>
       </div>
       {{/files}}

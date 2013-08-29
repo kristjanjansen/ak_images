@@ -4,6 +4,11 @@ var watch = require('watch')
 var im = require('imagemagick');
 var express = require('express');
 var wrench = require('wrench')
+var each = require('each')
+
+
+var cron = require('cron').CronJob;
+var job = new cron('*/20 * * * * *', processDir).start()
 
 
 app = express()
@@ -27,10 +32,6 @@ var filetypes = /\.(jpg|jpeg|png|gif)$/i
 var source = 'files/source'
 var target = 'files/target'
 var indexFile = 'files/index.json'
-
-function validateFile(file) {
-  return fs.statSync(file).isFile() && file.match(filetypes)
-} 
 
 
 function generateIndex() {
@@ -66,60 +67,51 @@ function generateIndex() {
 
 }
 
-/*
-watch.createMonitor(source, {ignoreDotFiles: true}, function (monitor) {
 
-   monitor.on("created", function (f, stat) {
-    console.log('crea', f)
-       
-    if (stat.isDirectory()) {
+function processDir() {
+  
+var queue = []
 
-      var dir = f.replace(source, target)
-   
-      if (!fs.existsSync(dir)) {
-        fs.mkdir(dir, function() {})
-      }
-      
-      fs.readdirSync(f)
-       .filter(function (file) {
-         return fs.statSync(path.join(f, file)).isFile() && file.match(filetypes);
-       })
-       .forEach(function (file) {
-         var src = path.join(f,file)
-         var tgt = src.replace(source, target)
-         generateThumbnail(src, tgt, function() {});
-       });
-    
-    } else if (f.match(filetypes)) {
-        var tgt = f.replace(source, target)
-        generateThumbnail(f, tgt, function() {});
-    }
-       
-   })
-   
-   monitor.on("changed", function (f, curr, prev) {
-     console.log('cha', f)
-   })
-   
-   monitor.on("removed", function (f, stat) {
-     console.log('rem', f)
-   })
-   
- })
+// Travel the source directories and find images not yet converted
+
+wrench.readdirSyncRecursive(source)
+.filter(function(f) {
+    return f.split('/').length == 2 && fs.statSync(path.join(source, f)).isFile() && f.match(filetypes)
+})
+.forEach(function (f) {
+  if (!fs.existsSync(path.join(target, f))) queue.push(f)
+})
+
+// Process each image in queue
+
+each(queue)
+.on('item', function(f, i, next) {
+  var p = path.join(target, f.split('/')[0])
+  if (!fs.existsSync(p)) {
+    fs.mkdirSync(p)
+  }
+  var s = path.join(source, f)
+  var t = path.join(target, f)  
+  generateThumbnail(s, t, function() {
+    next()
+  })
+})
+.on('end', function() {
+})
+
+}
 
 
- function generateThumbnail(sf, tf, cb) {
+function generateThumbnail(s, t, callback) {
+  console.log('im:', s, t)
+  im.crop({
+    srcPath: s,
+    dstPath: t,
+    width: 200,
+    height: 200
+  }, function(err, stdout, stderr) {
+    console.log(err, stdout, stderr)
+    callback()
+  });
+}
 
-   im.crop({
-     srcPath: sf,
-     dstPath: tf,
-     width: 200,
-     height: 200
-   }, function(err, stdout, stderr) {
-     console.log(err, stdout, stderr)
-     cb()
-   });
- 
- }
- 
-*/
