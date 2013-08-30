@@ -6,6 +6,7 @@ var express = require('express');
 var wrench = require('wrench')
 var each = require('each')
 
+var port = 3000
 
 var cron = require('cron').CronJob;
 var job = new cron('*/20 * * * * *', processDir).start()
@@ -24,7 +25,9 @@ app = express()
     res.sendfile(__dirname + '/public/index.html');
   });
   
-app.listen(3000)
+app.listen(port)
+
+console.log('Listening on port', port)
 
 
 var filetypes = /\.(jpg|jpeg|png|gif)$/i
