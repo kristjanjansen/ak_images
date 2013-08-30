@@ -6,7 +6,7 @@ var express = require('express');
 var wrench = require('wrench')
 var each = require('each')
 
-var port = 3000
+var port = 3001
 
 var cron = require('cron').CronJob;
 var job = new cron('*/20 * * * * *', processDir).start()
