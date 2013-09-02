@@ -28,7 +28,7 @@ h1 {
   color: #ccc;
 }
 article {
-  font-size: 0;    
+  font-size: 0;  
 }
 article a {
   display: inline-block;
@@ -53,6 +53,9 @@ article h2 {
 .tile a {
   color: white;
 }
+.file {
+  text-align: center;
+}
 .file img {
-  width: 100%;
+  max-height: 90%;
 }
