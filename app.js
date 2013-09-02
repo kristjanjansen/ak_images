@@ -9,7 +9,7 @@ var each = require('each')
 var port = 4001
 
 var cron = require('cron').CronJob;
-var job = new cron('*/20 * * * * *', processDir).start()
+var job = new cron('*/60 * * * * *', processDir).start()
 
 
 app = express()
