@@ -92,6 +92,6 @@ function generateThumbnail(s, t, callback) {
 }
 
 var db = levelup('./db')
-var queue = Jobs(db, worker, 5);
+var queue = Jobs(db, worker, 1);
 
-var cron = new cron.CronJob('*/5 * * * * *', processDir).start()
+var cron = new cron.CronJob('*/15 * * * * *', processDir).start()
