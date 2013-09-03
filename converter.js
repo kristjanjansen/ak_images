@@ -1,9 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 
-//var watch = require('watch')
 var im = require('imagemagick-native');
-//var express = require('express');
 var wrench = require('wrench')
 var each = require('each')
 var levelup = require('levelup');
@@ -11,6 +9,8 @@ var Jobs = require('level-jobs');
 var cron = require('cron');
 
 var port = 4001
+var concurrentJobs = 2
+
 var filetypes = /\.(jpg|jpeg|png|gif)$/i
 var sourceDir = 'files/original'
 
@@ -18,7 +18,8 @@ var preset = {
   small: {
     targetDir: 'files/small',
     width: 200,
-    height: 200     
+    height: 200,
+    resizeStyle: 'aspectfill'     
   },
   big: {
     targetDir: 'files/big',
@@ -36,7 +37,15 @@ wrench.readdirSyncRecursive(sourceDir)
 })
 .forEach(function (f) {
   for (key in preset) {
-    if (!fs.existsSync(path.join(preset[key].targetDir, f))) {
+    var targetFile = path.join(preset[key].targetDir, f)
+    if (!fs.existsSync(targetFile)) {
+    
+      var targetDir = path.join(preset[key].targetDir, f.split('/')[0])
+       if (!fs.existsSync(targetDir)) {
+         fs.mkdirSync(targetDir)
+       }
+       fs.openSync(targetFile, 'w')
+         
     console.log('### Adding to queue', f)
       queue.push({f: f}, function(err) {
         if (err) console.error('Error pushing work into the queue', err.stack)
@@ -52,13 +61,10 @@ function worker(payload, callback) {
 
   each(preset)
   .on('item', function(key, value, next) {
-  var p = path.join(preset[key].targetDir, payload.f.split('/')[0])
-  if (!fs.existsSync(p)) {
-    fs.mkdirSync(p)
-  }
+ 
   var s = path.join(sourceDir, payload.f)
   var t = path.join(preset[key].targetDir, payload.f)  
-  generateThumbnail(s, t, function() {
+  generateThumbnail(s, t, preset[key].width, preset[key].height, preset[key].resizeStyle ? preset[key].resizeStyle : null, function() {
     next()
   })
   })
@@ -68,7 +74,7 @@ function worker(payload, callback) {
 }
 
 
-function generateThumbnail(s, t, callback) {
+function generateThumbnail(s, t, w, h, resizeStyle, callback) {
  
   console.log('im:', s, t)
  
@@ -79,8 +85,9 @@ function generateThumbnail(s, t, callback) {
   var ts = fs.createWriteStream(t)  
   var image = im.convert({
     srcData: data,
-    width: 200,
-    height: 200,
+    width: w,
+    height: h,
+    resizeStyle: resizeStyle || 'aspectfit',
     debug: 1
   })
   ts.write(image, function() {
@@ -92,6 +99,6 @@ function generateThumbnail(s, t, callback) {
 }
 
 var db = levelup('./db')
-var queue = Jobs(db, worker, 1);
+var queue = Jobs(db, worker, concurrentJobs);
 
 var cron = new cron.CronJob('*/15 * * * * *', processDir).start()

@@ -8,18 +8,29 @@ var wrench = require('wrench')
 
 var port = 4001
 var filetypes = /\.(jpg|jpeg|png|gif)$/i
-var source = 'files/source'
-var target = 'files/target'
+var sourceDir = 'files/original'
 var indexFile = 'files/index.json'
 
+var preset = {
+  small: {
+    targetDir: 'files/small',
+    width: 200,
+    height: 200     
+  },
+  big: {
+    targetDir: 'files/big',
+    width: 800,
+    height: 800     
+  }
+}
 
 function generateIndex() {
 
   var index = {}
 
-  wrench.readdirSyncRecursive(source)
+  wrench.readdirSyncRecursive(sourceDir)
   .filter(function(f) {
-      return f.split('/').length == 2 && fs.statSync(path.join(source, f)).isFile() && f.match(filetypes)
+      return f.split('/').length == 2 && fs.statSync(path.join(sourceDir, f)).isFile() && f.match(filetypes)
   })
   .forEach(function (f) {
     var dir = f.split('/')[0]
@@ -29,11 +40,12 @@ function generateIndex() {
       index[dir] = {}
       index[dir].files = []
     } 
-
+    
     index[dir].files.push({
       file: file,
-      filepath_source: path.join(source, f),
-      filepath_target: path.join(target, f)
+      filepath_original: path.join(sourceDir, f),
+      filepath_small: path.join(preset.small.targetDir, f),
+      filepath_big: path.join(preset.big.targetDir, f)
     })
 
   })
