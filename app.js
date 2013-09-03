@@ -55,7 +55,7 @@ function worker(payload, callback) {
 callback()
 }
 
-var queue = Jobs(db, worker, 1);
+var queue = Jobs(db, worker, 5);
 
 
 
@@ -137,15 +137,22 @@ function generateThumbnail(s, t, callback) {
  
   console.log('im:', s, t)
  
-  var sfile = fs.readFileSync(s)
-  var tbuf = im.convert({
-    srcData: sfile,
+  fs.readFile(s, function(err, data) {
+  
+  if (err) throw err
+
+  var ts = fs.createWriteStream(t)  
+  var image = im.convert({
+    srcData: data,
     width: 200,
     height: 200,
     debug: 1
   })
-  fs.writeFileSync(t, tbuf, 'binary')
-  callback()
-
+  ts.write(image, function() {
+    callback()
+  })
+  
+  })
+    
 }
 
