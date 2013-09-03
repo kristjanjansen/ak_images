@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var watch = require('watch')
-var im = require('imagemagick');
+var im = require('imagemagick-native');
 var express = require('express');
 var wrench = require('wrench')
 var each = require('each')
@@ -9,7 +9,7 @@ var each = require('each')
 var port = 4001
 
 var cron = require('cron').CronJob;
-var job = new cron('*/20 * * * * *', processDir).start()
+var job = new cron('*/5 * * * * *', processDir).start()
 
 
 app = express()
@@ -107,14 +107,14 @@ each(queue)
 
 function generateThumbnail(s, t, callback) {
   console.log('im:', s, t)
-  im.crop({
-    srcPath: s,
-    dstPath: t,
+  var sfile = fs.readFileSync(s)
+  var tbuf = im.convert({
+    srcData: sfile,
     width: 200,
-    height: 200
-  }, function(err, stdout, stderr) {
-    console.log(err, stdout, stderr)
-    callback()
-  });
+    height: 200,
+    debug: 1
+  })
+  fs.writeFileSync(t, tbuf, 'binary')
+  callback()
 }
 
