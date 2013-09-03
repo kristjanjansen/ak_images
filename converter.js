@@ -5,34 +5,44 @@ var path = require('path');
 var im = require('imagemagick-native');
 //var express = require('express');
 var wrench = require('wrench')
-//var each = require('each')
+var each = require('each')
 var levelup = require('levelup');
 var Jobs = require('level-jobs');
 var cron = require('cron');
 
 var port = 4001
 var filetypes = /\.(jpg|jpeg|png|gif)$/i
-var source = 'files/source'
-var target = 'files/target'
+var sourceDir = 'files/original'
 
-
+var preset = {
+  small: {
+    targetDir: 'files/small',
+    width: 200,
+    height: 200     
+  },
+  big: {
+    targetDir: 'files/big',
+    width: 800,
+    height: 800     
+  }
+}
 
 
 function processDir() {
   
-wrench.readdirSyncRecursive(source)
+wrench.readdirSyncRecursive(sourceDir)
 .filter(function(f) {
-    return f.split('/').length == 2 && fs.statSync(path.join(source, f)).isFile() && f.match(filetypes)
+    return f.split('/').length == 2 && fs.statSync(path.join(sourceDir, f)).isFile() && f.match(filetypes)
 })
 .forEach(function (f) {
-  if (!fs.existsSync(path.join(target, f))) {
-  console.log('### Adding to queue', f)
-    queue.push({f: f}, function(err) {
-      if (err) console.error('Error pushing work into the queue', err.stack)
-    })
-  
-  }
-  
+  for (key in preset) {
+    if (!fs.existsSync(path.join(preset[key].targetDir, f))) {
+    console.log('### Adding to queue', f)
+      queue.push({f: f}, function(err) {
+        if (err) console.error('Error pushing work into the queue', err.stack)
+      })  
+    }
+  }  
 })
 
 }
@@ -40,16 +50,21 @@ wrench.readdirSyncRecursive(source)
 
 function worker(payload, callback) {
 
-  var p = path.join(target, payload.f.split('/')[0])
+  each(preset)
+  .on('item', function(key, value, next) {
+  var p = path.join(preset[key].targetDir, payload.f.split('/')[0])
   if (!fs.existsSync(p)) {
     fs.mkdirSync(p)
   }
-  var s = path.join(source, payload.f)
-  var t = path.join(target, payload.f)  
+  var s = path.join(sourceDir, payload.f)
+  var t = path.join(preset[key].targetDir, payload.f)  
   generateThumbnail(s, t, function() {
-    callback()
+    next()
   })
-
+  })
+  .on('end', function() {
+    callback()
+  });
 }
 
 
