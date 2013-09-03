@@ -36,6 +36,28 @@ var source = 'files/source'
 var target = 'files/target'
 var indexFile = 'files/index.json'
 
+var levelup = require('levelup');
+var db = levelup('./db')
+var Jobs = require('level-jobs');
+
+function worker(payload, callback) {
+  console.log(payload)
+  var p = path.join(target, payload.f.split('/')[0])
+  if (!fs.existsSync(p)) {
+    fs.mkdirSync(p)
+  }
+  var s = path.join(source, payload.f)
+  var t = path.join(target, payload.f)  
+  generateThumbnail(s, t, function() {
+    callback()
+  })
+
+callback()
+}
+
+var queue = Jobs(db, worker, 1);
+
+
 
 function generateIndex() {
 
@@ -73,8 +95,6 @@ function generateIndex() {
 
 function processDir() {
   
-var queue = []
-
 // Travel the source directories and find images not yet converted
 
 wrench.readdirSyncRecursive(source)
@@ -82,11 +102,18 @@ wrench.readdirSyncRecursive(source)
     return f.split('/').length == 2 && fs.statSync(path.join(source, f)).isFile() && f.match(filetypes)
 })
 .forEach(function (f) {
-  if (!fs.existsSync(path.join(target, f))) queue.push(f)
+  if (!fs.existsSync(path.join(target, f))) {
+  console.log('### Adding to queue', f)
+    queue.push({f: f}, function(err) {
+      if (err) console.error('Error pushing work into the queue', err.stack)
+    })
+  
+  }
+  
 })
 
 // Process each image in queue
-
+/*
 each(queue)
 .on('item', function(f, i, next) {
   var p = path.join(target, f.split('/')[0])
@@ -101,12 +128,15 @@ each(queue)
 })
 .on('end', function() {
 })
+*/
 
 }
 
 
 function generateThumbnail(s, t, callback) {
+ 
   console.log('im:', s, t)
+ 
   var sfile = fs.readFileSync(s)
   var tbuf = im.convert({
     srcData: sfile,
@@ -116,5 +146,6 @@ function generateThumbnail(s, t, callback) {
   })
   fs.writeFileSync(t, tbuf, 'binary')
   callback()
+
 }
 
