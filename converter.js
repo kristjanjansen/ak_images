@@ -9,7 +9,7 @@ var Jobs = require('level-jobs');
 var cron = require('cron');
 
 var port = 4001
-var concurrentJobs = 2
+var concurrentJobs = 1
 
 var filetypes = /\.(jpg|jpeg|png|gif)$/i
 var sourceDir = 'files/original'
@@ -88,7 +88,7 @@ function generateThumbnail(s, t, w, h, resizeStyle, callback) {
     width: w,
     height: h,
     resizeStyle: resizeStyle || 'aspectfit',
-    debug: 1
+    debug: 0
   })
   ts.write(image, function() {
     callback()
@@ -101,4 +101,4 @@ function generateThumbnail(s, t, w, h, resizeStyle, callback) {
 var db = levelup('./db')
 var queue = Jobs(db, worker, concurrentJobs);
 
-var cron = new cron.CronJob('*/15 * * * * *', processDir).start()
+var cron = new cron.CronJob('*/30 * * * * *', processDir).start()
