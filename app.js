@@ -1,10 +1,7 @@
 var fs = require('fs');
 var path = require('path');
-//var watch = require('watch')
-//var im = require('imagemagick-native');
 var express = require('express');
 var wrench = require('wrench')
-//var each = require('each')
 
 var port = 4001
 var filetypes = /\.(jpg|jpeg|png|gif)$/i
